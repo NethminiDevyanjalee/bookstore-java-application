@@ -1,0 +1,6 @@
+name: Test
+#database:
+#  - host: localhost
+#    user: root
+#    password:
+#    name: myDb
