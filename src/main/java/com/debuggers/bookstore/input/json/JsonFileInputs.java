@@ -27,8 +27,8 @@ public class JsonFileInputs implements Input {
             // database config
             JSONObject db = (JSONObject) json.get("database");
             jsonFileInputData.setDatabaseHost((String) db.get("host"));
-            jsonFileInputData.setDatabaseName((String) db.get("database-name"));
-            jsonFileInputData.setDatabaseUserName((String) db.get("user-name"));
+            jsonFileInputData.setDatabaseName((String) db.get("name"));
+            jsonFileInputData.setDatabaseUserName((String) db.get("user"));
             jsonFileInputData.setGetDatabasePassword((String) db.get("password"));
 
 
