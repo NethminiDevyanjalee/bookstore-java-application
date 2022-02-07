@@ -9,7 +9,6 @@ import com.debuggers.bookstore.repository.DataRepositoryException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class SqlDataRepository implements DataRepository {
