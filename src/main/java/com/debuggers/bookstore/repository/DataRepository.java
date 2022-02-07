@@ -10,12 +10,22 @@ public interface DataRepository {
 
     ResultSet executeQuery(String query) throws DataRepositoryException;
 
-    List<SqlDataModel> fetch(String table, Class dataClass) throws DataRepositoryException;
+    List<SqlDataModel> get( Class dataClass) throws DataRepositoryException;
 
-    void insert(String table,SqlDataModel sqlDataModel) throws DataRepositoryException;
+    void table(String tableName);
 
-    void update(String table,SqlDataModel sqlDataModel) throws DataRepositoryException;
+    void  where(String columnName,Object value);
 
-    void delete(String table,SqlDataModel sqlDataModel) throws DataRepositoryException;
+    void  where(String columnName,String operator,Object value);
+
+    void  orWhere(String columnName,Object value);
+
+    void  orWhere(String columnName,String operator,Object value);
+
+    void insert(SqlDataModel sqlDataModel) throws DataRepositoryException;
+
+    void update(SqlDataModel sqlDataModel) throws DataRepositoryException;
+
+    void delete() throws DataRepositoryException;
 
 }

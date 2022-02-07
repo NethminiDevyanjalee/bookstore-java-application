@@ -14,13 +14,14 @@ import java.util.List;
 public class SqlDataRepository implements DataRepository {
 
     private final JsonFileInputData jsonFileInputData;
-    private Connection conn = null;
-    private Statement statement = null;
-    private PreparedStatement preparedStatement = null;
-    private ResultSet resultSet = null;
+    private Connection conn;
+    private Statement statement;
+    private PreparedStatement preparedStatement;
+    private ResultSet resultSet;
 
-    private String selectQuery = "SELECT * FROM $TABLE";
-    private String insertQuery = "INSERT INTO $TABLE($COLUMNS) VALUES($VALUES)";
+    private String table;
+    private String whereQuery;
+    private List<Object> whereValues = new ArrayList<>();
 
     public SqlDataRepository(JsonFileInputData jsonFileInputData) {
         this.jsonFileInputData = jsonFileInputData;
@@ -59,16 +60,71 @@ public class SqlDataRepository implements DataRepository {
 
     }
 
+    @Override
+    public void table(String tableName) {
+        this.table = tableName;
+    }
 
     @Override
-    public List<SqlDataModel> fetch(String table, Class dataClass) throws DataRepositoryException {
+    public void where(String columnName, Object value) {
+        setWhere(columnName, "=", value, "AND");
+    }
+
+    @Override
+    public void where(String columnName, String operator, Object value) {
+        setWhere(columnName, operator, value, "AND");
+    }
+
+    @Override
+    public void orWhere(String columnName, Object value) {
+        setWhere(columnName, "=", value, "OR");
+    }
+
+    @Override
+    public void orWhere(String columnName, String operator, Object value) {
+        setWhere(columnName, operator, value, "OR");
+    }
+
+    private void setWhere(String columnName, String operator, Object value, String logicalOperator) {
+        whereValues.add(value);
+
+        if (whereQuery == null) {
+            whereQuery = String.format("\tWHERE %s %s ?", columnName, operator);
+        } else {
+            whereQuery += String.format("\t%s %s %s ?", logicalOperator, columnName, operator);
+        }
+
+    }
+
+    @Override
+    public List<SqlDataModel> get(Class dataClass) throws DataRepositoryException {
+
+        if (table == null) throw new DataRepositoryException("Table new can not be null");
 
         List<SqlDataModel> dataList = new ArrayList<>();
+        String sql = String.format("SELECT * FROM %s", table);
+
 
         try {
 
-            selectQuery = selectQuery.replace("$TABLE", table);
-            preparedStatement = conn.prepareStatement(selectQuery);
+            if (!whereValues.isEmpty()) {
+
+                sql += whereQuery;
+                preparedStatement = conn.prepareStatement(sql);
+
+                int i = 1;
+
+                for (Object obj : whereValues) {
+                    preparedStatement.setObject(i, obj);
+                    i++;
+                }
+
+            } else {
+
+                preparedStatement = conn.prepareStatement(sql);
+
+            }
+
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
@@ -87,14 +143,17 @@ public class SqlDataRepository implements DataRepository {
     }
 
     @Override
-    public void insert(String table, SqlDataModel sqlDataModel) throws DataRepositoryException {
+    public void insert(SqlDataModel sqlDataModel) throws DataRepositoryException {
+
+        if (table == null) throw new DataRepositoryException("Table new can not be null");
+
         ColumnValueMap columnValueMap = sqlDataModel.writeSQL(new ColumnValueMap());
-        insertQuery = insertQuery.replace("$TABLE", table);
-        insertQuery = insertQuery.replace("$COLUMNS", columnValueMap.getStrColumns());
-        insertQuery = insertQuery.replace("$VALUES", columnValueMap.getStrValues());
+
+        String sql = String.format("INSERT INTO %s(%s) VALUES(%s)", table, columnValueMap.getStrColumns(), columnValueMap.getStrValues());
 
         try {
-            preparedStatement = conn.prepareStatement(insertQuery);
+
+            preparedStatement = conn.prepareStatement(sql);
 
             int i = 1;
             for (Object obj : columnValueMap.getValues()) {
@@ -104,20 +163,83 @@ public class SqlDataRepository implements DataRepository {
 
             preparedStatement.execute();
 
-
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+
+            throw new DataRepositoryException(e, e.getMessage());
+
         }
     }
 
     @Override
-    public void update(String table, SqlDataModel sqlDataModel) throws DataRepositoryException {
-        // TODO:Implementation
+    public void update(SqlDataModel sqlDataModel) throws DataRepositoryException {
+
+        if (table == null) throw new DataRepositoryException("Table new can not be null");
+
+        ColumnValueMap columnValueMap = sqlDataModel.writeSQL(new ColumnValueMap());
+
+        String sql = String.format("UPDATE %s %s", table, columnValueMap.getStrUpdates());
+
+        List<Object> values = columnValueMap.getValues();
+
+
+        if (!whereValues.isEmpty()) {
+            sql += whereQuery;
+            values.addAll(whereValues);
+        }
+
+        try {
+
+            preparedStatement = conn.prepareStatement(sql);
+
+            int i = 1;
+            for (Object obj : columnValueMap.getValues()) {
+                preparedStatement.setObject(i, obj);
+                i++;
+            }
+
+            preparedStatement.execute();
+
+        } catch (SQLException e) {
+
+            throw new DataRepositoryException(e, e.getMessage());
+
+        }
     }
 
     @Override
-    public void delete(String table, SqlDataModel sqlDataModel) throws DataRepositoryException {
-        // TODO:Implementation
+    public void delete() throws DataRepositoryException {
+
+        if (table == null) throw new DataRepositoryException("Table new can not be null");
+
+        String sql = String.format("DELETE FROM %s", table);
+
+        try {
+
+            if (!whereValues.isEmpty()) {
+
+                sql += whereQuery;
+                preparedStatement = conn.prepareStatement(sql);
+
+                int i = 1;
+
+                for (Object obj : whereValues) {
+                    preparedStatement.setObject(i, obj);
+                    i++;
+                }
+
+            } else {
+
+                preparedStatement = conn.prepareStatement(sql);
+
+            }
+
+            preparedStatement.execute();
+
+        } catch (SQLException e) {
+
+            throw new DataRepositoryException(e, e.getMessage());
+
+        }
     }
 
 }
