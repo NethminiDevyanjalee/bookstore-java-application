@@ -10,7 +10,7 @@ public interface DataRepository {
 
     ResultSet executeQuery(String query) throws DataRepositoryException;
 
-    List<SqlDataModel> get( Class dataClass) throws DataRepositoryException;
+    List<SqlDataModel> get(Class dataClass) throws DataRepositoryException;
 
     void table(String tableName);
 
