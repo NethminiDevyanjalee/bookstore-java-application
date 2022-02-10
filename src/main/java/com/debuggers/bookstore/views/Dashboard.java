@@ -1,6 +1,7 @@
 package com.debuggers.bookstore.views;
 
 import com.debuggers.bookstore.repository.DataRepository;
+import com.debuggers.bookstore.views.book.Author;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,7 +38,7 @@ public class Dashboard extends View{
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                //navigateTo("author");
+                navigateTo("author");
             }
         });
     }
@@ -45,6 +46,7 @@ public class Dashboard extends View{
     private void initComponents() {
         cards = new JPanel(new CardLayout());
         cards.add(new Home(dataRepository),"home");
+        cards.add(new Author(dataRepository),"author");
         pageViewPanel.setLayout(new BoxLayout(pageViewPanel, BoxLayout.PAGE_AXIS));
         pageViewPanel.add(cards);
         setContentPane(mainPanel);
