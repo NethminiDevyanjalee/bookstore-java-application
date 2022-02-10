@@ -8,6 +8,7 @@ import com.debuggers.bookstore.input.json.JsonFileInputs;
 import com.debuggers.bookstore.repository.DataRepository;
 import com.debuggers.bookstore.repository.DataRepositoryException;
 import com.debuggers.bookstore.repository.sql.SqlDataRepository;
+import com.debuggers.bookstore.views.Alert;
 import com.debuggers.bookstore.views.Dashboard;
 
 public class BookStoreApplication {
@@ -27,7 +28,7 @@ public class BookStoreApplication {
 
         } catch (DataRepositoryException | InputException e) {
 
-            System.out.println(e.getMessage());
+            Alert.showError("Error Occur:",e.getMessage());
 
         }
 
