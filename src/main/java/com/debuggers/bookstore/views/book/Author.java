@@ -1,6 +1,9 @@
 package com.debuggers.bookstore.views.book;
 
+import com.debuggers.bookstore.models.BookAuthorModel;
+import com.debuggers.bookstore.models.SqlDataModel;
 import com.debuggers.bookstore.repository.DataRepository;
+import com.debuggers.bookstore.repository.DataRepositoryException;
 import com.debuggers.bookstore.views.PageView;
 import com.debuggers.bookstore.views.View;
 
@@ -9,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class Author extends PageView {
     private JPanel mainPanel;
@@ -30,6 +34,7 @@ public class Author extends PageView {
     public Author(DataRepository dataRepository) {
         super();
         this.dataRepository = dataRepository;
+        dataRepository.table("book_author");
         add(mainPanel);
 
         btnSave.addActionListener(new ActionListener() {
@@ -89,6 +94,14 @@ public class Author extends PageView {
     private void createTable() {
         final String[] columnNames = {"First Name","Last Name","Email","Telephone Number"};
         final DefaultTableModel tableModel = new DefaultTableModel(columnNames,0);
+        try {
+            for (var e:dataRepository.get(BookAuthorModel.class) ) {
+              BookAuthorModel data = (BookAuthorModel) e;
+              tableModel.addRow(new String[]{data.getFirstName(),data.getFirstName(),data.getEmail(),data.getPhone()});
+            }
+        } catch (DataRepositoryException e) {
+            e.printStackTrace();
+        }
         table = new JTable(tableModel);
         table.setFillsViewportHeight(true);
         jScrollPane.setViewportView(table);
