@@ -12,5 +12,9 @@ public class Alert {
         JOptionPane.showMessageDialog(new JFrame(),message,title,JOptionPane.INFORMATION_MESSAGE);
     }
 
+    static public int showConfirm(String title,String message) {
+       return JOptionPane.showConfirmDialog(new JFrame(),message,title,JOptionPane.YES_NO_OPTION);
+    }
+
 
 }
