@@ -61,9 +61,6 @@ public class Author extends PageView {
             }
 
         });
-
-        createTable();
-
         clearButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -71,6 +68,8 @@ public class Author extends PageView {
                 clearFields();
             }
         });
+
+        createTable();
     }
 
     private void insert() {
