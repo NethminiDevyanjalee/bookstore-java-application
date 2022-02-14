@@ -17,7 +17,7 @@ public class JsonFileInputs implements Input {
         //JSON parser object to parse read file
         JSONParser jsonParser = new JSONParser();
 
-        try (FileReader reader = new FileReader("config.json")) {
+        try (FileReader reader = new FileReader("src/main/resources/config.json")) {
             //Read JSON file
             Object obj = jsonParser.parse(reader);
             JSONObject json = (JSONObject) obj;

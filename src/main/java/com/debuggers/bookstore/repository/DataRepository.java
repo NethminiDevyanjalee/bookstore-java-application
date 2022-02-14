@@ -12,7 +12,9 @@ public interface DataRepository {
 
     List<SqlDataModel> get(Class dataClass) throws DataRepositoryException;
 
-    void table(String tableName);
+    void createStatement();
+
+    void createStatement(String tableName);
 
     void  where(String columnName,Object value);
 

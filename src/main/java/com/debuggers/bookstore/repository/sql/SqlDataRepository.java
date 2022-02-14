@@ -60,9 +60,18 @@ public class SqlDataRepository implements DataRepository {
 
     }
 
+
     @Override
-    public void table(String tableName) {
-        this.table = tableName;
+    public void createStatement() {
+        whereValues.clear();
+        whereQuery = null;
+    }
+
+    @Override
+    public void createStatement(String tableName) {
+        table = tableName;
+        whereValues.clear();
+        whereQuery = null;
     }
 
     @Override
@@ -141,6 +150,7 @@ public class SqlDataRepository implements DataRepository {
 
         return dataList;
     }
+
 
     @Override
     public void insert(SqlDataModel sqlDataModel) throws DataRepositoryException {

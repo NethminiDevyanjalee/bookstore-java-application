@@ -29,6 +29,7 @@ public class BookStoreApplication {
         } catch (DataRepositoryException | InputException e) {
 
             Alert.showError("Error Occur:",e.getMessage());
+            System.exit(0);
 
         }
 
