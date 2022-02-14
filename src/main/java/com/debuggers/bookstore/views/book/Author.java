@@ -25,7 +25,7 @@ public class Author extends PageView {
     private JScrollPane jScrollPane;
     private JButton btnEdit;
     private JButton btnDelete;
-    private JButton clearButton;
+    private JButton btnClear;
 
     private DataRepository dataRepository;
     private List<SqlDataModel> dataList;
@@ -61,7 +61,7 @@ public class Author extends PageView {
             }
 
         });
-        clearButton.addMouseListener(new MouseAdapter() {
+        btnClear.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
