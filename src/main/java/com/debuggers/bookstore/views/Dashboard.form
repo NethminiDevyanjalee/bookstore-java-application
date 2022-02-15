@@ -17,7 +17,7 @@
         <border type="none"/>
         <children/>
       </grid>
-      <grid id="5435c" binding="navPanel" layout-manager="GridLayoutManager" row-count="4" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="5435c" binding="navPanel" layout-manager="GridLayoutManager" row-count="10" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="10" left="10" bottom="10" right="10"/>
         <constraints>
           <grid row="0" column="0" row-span="6" col-span="1" vsize-policy="7" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -37,17 +37,13 @@
               <text value="BOOKBERRIES SYSTEM"/>
             </properties>
           </component>
-          <vspacer id="7e0cc">
-            <constraints>
-              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-            </constraints>
-          </vspacer>
           <component id="d7d02" class="javax.swing.JButton" binding="homeButton" default-binding="true">
             <constraints>
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <font size="12" style="1"/>
+              <horizontalAlignment value="2"/>
               <text value="Home"/>
             </properties>
           </component>
@@ -57,9 +53,69 @@
             </constraints>
             <properties>
               <font size="12" style="1"/>
+              <horizontalAlignment value="2"/>
               <text value="Book Authors"/>
             </properties>
           </component>
+          <component id="f9ff2" class="javax.swing.JButton" binding="bookPublisherButton" default-binding="true">
+            <constraints>
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="2"/>
+              <text value="Book Publisher"/>
+            </properties>
+          </component>
+          <component id="52aca" class="javax.swing.JButton" binding="bookCategoryButton" default-binding="true">
+            <constraints>
+              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="2"/>
+              <text value="Book Category"/>
+            </properties>
+          </component>
+          <component id="b19c9" class="javax.swing.JButton" binding="bookButton" default-binding="true">
+            <constraints>
+              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="2"/>
+              <text value="Book"/>
+            </properties>
+          </component>
+          <component id="74639" class="javax.swing.JButton" binding="stockButton" default-binding="true">
+            <constraints>
+              <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="2"/>
+              <text value="Stock"/>
+            </properties>
+          </component>
+          <component id="37320" class="javax.swing.JButton" binding="promationButton" default-binding="true">
+            <constraints>
+              <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="2"/>
+              <text value="Promation"/>
+            </properties>
+          </component>
+          <component id="393c9" class="javax.swing.JButton" binding="usersButton" default-binding="true">
+            <constraints>
+              <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="2"/>
+              <text value="Users"/>
+            </properties>
+          </component>
+          <vspacer id="8a21d">
+            <constraints>
+              <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+            </constraints>
+          </vspacer>
         </children>
       </grid>
     </children>

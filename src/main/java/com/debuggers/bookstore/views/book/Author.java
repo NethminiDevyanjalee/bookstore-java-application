@@ -37,6 +37,11 @@ public class Author extends PageView {
         this.dataRepository = dataRepository;
         dataRepository.createStatement("book_author");
 
+        initComponents();
+
+    }
+
+    private void initComponents() {
         add(mainPanel);
 
         btnSave.addMouseListener(new MouseAdapter() {
