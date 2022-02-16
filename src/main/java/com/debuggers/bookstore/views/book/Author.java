@@ -26,6 +26,7 @@ public class Author extends PageView {
     private JButton btnEdit;
     private JButton btnDelete;
     private JButton btnClear;
+    private JPanel formPanel;
 
     private DataRepository dataRepository;
     private List<SqlDataModel> dataList;
@@ -37,11 +38,6 @@ public class Author extends PageView {
         this.dataRepository = dataRepository;
         dataRepository.createStatement("book_author");
 
-        initComponents();
-
-    }
-
-    private void initComponents() {
         add(mainPanel);
 
         btnSave.addMouseListener(new MouseAdapter() {
@@ -118,7 +114,7 @@ public class Author extends PageView {
             clearFields();
             createTable();
             bookAuthorModel = null;
-            Alert.showSuccess("Success", "This change has been save!");
+            Alert.showSuccess("Success", "This change has been saved!");
 
         } catch (DataRepositoryException exception) {
 
@@ -132,7 +128,7 @@ public class Author extends PageView {
         final int selectedRow = table.getSelectedRow();
 
         if (selectedRow == -1) {
-            Alert.showError("Edit Error:", "Please the record that you want to edit!");
+            Alert.showError("Edit Error:", "Please select the record that you want to edit!");
             return;
         }
 
@@ -149,11 +145,11 @@ public class Author extends PageView {
         final int selectedRow = table.getSelectedRow();
 
         if (selectedRow == -1) {
-            Alert.showError("Deletion Error:", "Please the record that you want to delete!");
+            Alert.showError("Deletion Error:", "Please select the record that you want to delete!");
             return;
         }
 
-        final int response = Alert.showConfirm("Delete record", "Are you sure you want to delete");
+        final int response = Alert.showConfirm("Delete record", "Are you sure you want to delete?");
         bookAuthorModel = (BookAuthorModel) dataList.get(selectedRow);
         bookAuthorModel.setIsDelete(1);
 
@@ -178,7 +174,7 @@ public class Author extends PageView {
 
 
     private void clearFields() {
-        Arrays.stream(mainPanel.getComponents()).forEach((c) -> {
+        Arrays.stream(formPanel.getComponents()).forEach((c) -> {
             if (c instanceof JTextField) {
                 ((JTextField) c).setText(null);
             }
