@@ -37,8 +37,7 @@ public class Author extends PageView {
 
         this.dataRepository = dataRepository;
         dataRepository.createStatement("book_author");
-
-        add(mainPanel);
+        initComponents();
 
         btnSave.addMouseListener(new MouseAdapter() {
             @Override
@@ -71,6 +70,10 @@ public class Author extends PageView {
         });
 
         createTable();
+    }
+
+    private void initComponents() {
+        add(mainPanel);
     }
 
     private void insert() {
