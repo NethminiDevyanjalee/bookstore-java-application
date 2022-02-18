@@ -35,6 +35,7 @@ public class Book extends PageView {
     private JTextArea textareaDescription;
 
     private List<SqlDataModel> dataList;
+    private List<SqlDataModel> authorList;
     private BookModel bookModel;
 
     public Book(DataRepository dataRepository) {
@@ -77,6 +78,28 @@ public class Book extends PageView {
 
     private void initComponents() {
         add(mainPanel);
+        loadAuthor();
+    }
+
+    private void loadAuthor() {
+
+        dataRepository.createStatement("book_author");
+        dataRepository.where("is_delete",0);
+
+        try {
+
+            authorList = dataRepository.get(BookAuthorModel.class);
+            comboAuthor.addItem("Choose");
+            authorList.stream().forEach((e)->{
+                BookAuthorModel author = (BookAuthorModel) e;
+                comboAuthor.addItem(author.getFirstName()+" "+author.getLastName());
+            });
+
+        } catch (DataRepositoryException e) {
+
+            Alert.showError("Database Error:",e.getMessage());
+
+        }
     }
 
     private void insert() {
@@ -85,15 +108,11 @@ public class Book extends PageView {
             bookModel = new BookModel();
 
         bookModel.setName(txtName.getText());
-
-
-        if (bookModel.getName().isEmpty()) {
-            Alert.showError("Validation Error:", "Name is Empty!");
+        BookAuthorModel selectedAuthor = (BookAuthorModel) authorList.get(comboAuthor.getSelectedIndex());
+        if (comboAuthor.getSelectedIndex() == 0) {
+            Alert.showError("Validation Error:", "Select the Author!");
             return;
         }
-
-
-
     }
 
     private void createTable() {
