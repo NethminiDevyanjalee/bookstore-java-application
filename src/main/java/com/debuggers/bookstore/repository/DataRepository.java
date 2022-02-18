@@ -10,19 +10,21 @@ public interface DataRepository {
 
     ResultSet executeQuery(String query) throws DataRepositoryException;
 
+    void execute(String query) throws DataRepositoryException;
+
     List<SqlDataModel> get(Class dataClass) throws DataRepositoryException;
 
     void createStatement();
 
     void createStatement(String tableName);
 
-    void  where(String columnName,Object value);
+    void where(String columnName, Object value);
 
-    void  where(String columnName,String operator,Object value);
+    void where(String columnName, String operator, Object value);
 
-    void  orWhere(String columnName,Object value);
+    void orWhere(String columnName, Object value);
 
-    void  orWhere(String columnName,String operator,Object value);
+    void orWhere(String columnName, String operator, Object value);
 
     void insert(SqlDataModel sqlDataModel) throws DataRepositoryException;
 
