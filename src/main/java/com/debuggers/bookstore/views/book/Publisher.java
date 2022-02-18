@@ -101,8 +101,7 @@ public class Publisher extends PageView {
 
         try {
 
-            dataRepository.createStatement();
-            System.out.println(bookPublisherModel.getId());
+            dataRepository.createStatement("book_publisher");
             if (bookPublisherModel.getId() == 0) {
                 dataRepository.insert(bookPublisherModel);
             } else {
