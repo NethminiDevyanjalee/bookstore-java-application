@@ -60,6 +60,20 @@ public class SqlDataRepository implements DataRepository {
 
     }
 
+    @Override
+    public void execute(String query) throws DataRepositoryException {
+        try {
+
+            statement = conn.createStatement();
+            statement.execute(query);
+
+        } catch (SQLException e) {
+
+            throw new DataRepositoryException(e, e.getMessage());
+
+        }
+    }
+
 
     @Override
     public void createStatement() {
