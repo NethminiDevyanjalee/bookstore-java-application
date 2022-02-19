@@ -1,5 +1,6 @@
-package com.debuggers.bookstore.models;
+package com.debuggers.bookstore.views.book;
 
+import com.debuggers.bookstore.models.SqlDataModel;
 import com.debuggers.bookstore.repository.ColumnValueMap;
 import com.debuggers.bookstore.repository.DataRepositoryException;
 
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class CategoryModel implements SqlDataModel{
+public class CategoryModel implements SqlDataModel {
     private int id;
     private String Category;
     private String subCategoriesStr;

@@ -13,8 +13,6 @@ public interface DataRepository {
 
     void execute(String query) throws DataRepositoryException;
 
-    void execute(String query) throws DataRepositoryException;
-
     List<SqlDataModel> get(Class dataClass) throws DataRepositoryException;
 
     void createStatement();
