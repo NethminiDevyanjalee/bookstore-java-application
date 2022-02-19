@@ -4,17 +4,21 @@ import com.debuggers.bookstore.repository.ColumnValueMap;
 import com.debuggers.bookstore.repository.DataRepositoryException;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class BookModel implements SqlDataModel {
 
     private int id;
     private String name;
     private String description;
+    private String author;
+    private String language;
+    private String publisher;
     private int authorId;
     private int categoryId;
     private int subCategoryId;
-    private int price;
-    private int isbn;
+    private double price;
+    private String isbn;
     private int publisherId;
     private int languageId;
 
@@ -69,7 +73,7 @@ public class BookModel implements SqlDataModel {
         this.subCategoryId = subCategoryId;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
@@ -77,11 +81,11 @@ public class BookModel implements SqlDataModel {
         this.price = price;
     }
 
-    public int getIsbn() {
+    public String getIsbn() {
         return isbn;
     }
 
-    public void setIsbn(int isbn) {
+    public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
 
@@ -109,13 +113,47 @@ public class BookModel implements SqlDataModel {
         this.isDelete = isDelete;
     }
 
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public String getPublisher() {
+        return publisher;
+    }
+
     @Override
     public void readSQL(ResultSet resultSet) throws DataRepositoryException {
-
+        try {
+            this.id = resultSet.getInt("id");
+            this.name = resultSet.getString("name");
+            this.author = resultSet.getString("author");
+            this.categoryId = resultSet.getInt("category_id");
+            this.subCategoryId = resultSet.getInt("sub_category_id");
+            this.languageId = resultSet.getInt("language_id");
+            this.language = resultSet.getString("language");
+            this.price = resultSet.getDouble("price");
+            this.isbn = resultSet.getString("isbn");
+            this.publisher = resultSet.getString("publisher");
+            this.isDelete = 0;
+        } catch (SQLException e) {
+            throw new DataRepositoryException(e, e.getMessage());
+        }
     }
 
     @Override
     public ColumnValueMap writeSQL(ColumnValueMap columnValueMap) throws DataRepositoryException {
-        return null;
+        columnValueMap.set("name", this.name);
+        columnValueMap.set("description", this.description);
+        columnValueMap.set("author_id", this.authorId);
+        columnValueMap.set("category_id", this.categoryId);
+        columnValueMap.set("sub_category_id", this.subCategoryId);
+        columnValueMap.set("isbn", this.isbn);
+        columnValueMap.set("slug", this.isbn);
+        columnValueMap.set("is_delete", this.isDelete);
+        return columnValueMap;
     }
 }
