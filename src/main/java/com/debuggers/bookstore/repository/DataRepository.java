@@ -9,6 +9,7 @@ public interface DataRepository {
     void connect() throws DataRepositoryException;
 
     ResultSet executeQuery(String query) throws DataRepositoryException;
+    List<SqlDataModel> executeQuery(String query,Class dataClass) throws DataRepositoryException;
 
     void execute(String query) throws DataRepositoryException;
 
@@ -26,7 +27,7 @@ public interface DataRepository {
 
     void orWhere(String columnName, String operator, Object value);
 
-    void insert(SqlDataModel sqlDataModel) throws DataRepositoryException;
+    Object insert(SqlDataModel sqlDataModel) throws DataRepositoryException;
 
     void update(SqlDataModel sqlDataModel) throws DataRepositoryException;
 
