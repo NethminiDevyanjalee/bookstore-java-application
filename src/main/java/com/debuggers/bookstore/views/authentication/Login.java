@@ -72,7 +72,7 @@ public class Login extends JFrame {
             }
 
             setVisible(false);
-            new Dashboard(dataRepository);
+            new Dashboard(dataRepository, (UserModel) users.get(0));
 
         } catch (DataRepositoryException e) {
 

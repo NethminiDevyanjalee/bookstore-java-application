@@ -1,5 +1,6 @@
 package com.debuggers.bookstore.views;
 
+import com.debuggers.bookstore.models.UserModel;
 import com.debuggers.bookstore.repository.DataRepository;
 import com.debuggers.bookstore.views.book.*;
 
@@ -21,14 +22,18 @@ public class Dashboard extends View{
     private JButton stockButton;
     private JButton promationButton;
     private JButton usersButton;
+    private JLabel lblUserName;
+    private JButton btnUser;
     private JPanel cards;
 
     private DataRepository dataRepository;
+    private UserModel user;
 
-    public Dashboard(DataRepository dataRepository) {
+    public Dashboard(DataRepository dataRepository,UserModel user) {
         super();
 
         this.dataRepository = dataRepository;
+        this.user = user;
 
         initComponents();
 
@@ -105,7 +110,10 @@ public class Dashboard extends View{
 
         pageViewPanel.setLayout(new BoxLayout(pageViewPanel, BoxLayout.PAGE_AXIS));
         pageViewPanel.add(cards);
+
+        lblUserName.setText(user.getFirstName());
         setContentPane(mainPanel);
+
         setVisible(true);
     }
 
