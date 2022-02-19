@@ -7,9 +7,12 @@ import com.debuggers.bookstore.repository.DataRepositoryException;
 import com.debuggers.bookstore.views.Alert;
 import com.debuggers.bookstore.views.Dashboard;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -18,9 +21,10 @@ import java.util.List;
 public class Login extends JFrame {
     private DataRepository dataRepository;
     private JPanel mainPanel;
-    private JTextField txtUserName;
+    private JTextField txtEmail;
     private JPasswordField txtPassword;
-    private JButton loginButton;
+    private JButton btnLogin;
+    private JLabel imageLabel;
 
     public Login(DataRepository dataRepository) {
         this.dataRepository = dataRepository;
@@ -35,7 +39,15 @@ public class Login extends JFrame {
         setTitle("Login | BOOKBERRIES");
         setVisible(true);
 
-        loginButton.addMouseListener(new MouseAdapter() {
+        try {
+            imageLabel.setIcon(
+                    new ImageIcon(ImageIO.read(new File("src/main/resources/images/user.png")))
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        btnLogin.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
@@ -45,7 +57,7 @@ public class Login extends JFrame {
     }
 
     private void login() {
-        String userName = txtUserName.getText();
+        String userName = txtEmail.getText();
         String password = String.valueOf(txtPassword.getPassword());
 
         if (userName.isEmpty()) {
