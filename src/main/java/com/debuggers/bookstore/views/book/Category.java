@@ -34,7 +34,8 @@ public class Category extends PageView {
     private CategoryModel categoryModel;
     private String fetchQuery = """
             SELECT category,book_category.id,book_category.is_delete,
-            IFNULL(GROUP_CONCAT(sub_category),'N/A') AS 'sub_category'
+            IFNULL(GROUP_CONCAT(sub_category),'N/A') AS 'sub_category',
+            IFNULL(GROUP_CONCAT(book_sub_category.id),'N/A') AS 'sub_category_ids'
             FROM book_category
             LEFT JOIN book_sub_category
             ON book_sub_category.category_id = book_category.id AND book_sub_category.is_delete = 0
@@ -195,7 +196,7 @@ public class Category extends PageView {
                 ((JTextField) c).setText(null);
             }
         });
-        subCatList.setListData(new Object[] {});
+        subCatList.setListData(new Object[]{});
         categoryModel = null;
     }
 
@@ -230,7 +231,7 @@ public class Category extends PageView {
                 tableModel.addRow(new String[]{data.getCategory(), data.getSubCategoriesStr()});
             }
         } catch (DataRepositoryException e) {
-            e.printStackTrace();
+            Alert.showError("Database Error:", e.getMessage());
         }
 
         table = new JTable(tableModel);
