@@ -25,6 +25,7 @@ public class Promotion extends PageView {
     private JButton btnDelete;
     private JButton btnClear;
     private JScrollPane jScrollPane;
+    private JPanel formPanel;
 
     private DataRepository dataRepository;
     private List<SqlDataModel> dataList;
@@ -157,7 +158,7 @@ public class Promotion extends PageView {
     }
 
     private void clearFields(){
-        Arrays.stream(mainPanel.getComponents()).forEach((c)->{
+        Arrays.stream(formPanel.getComponents()).forEach((c)->{
             if (c instanceof JTextField){
                 ((JTextField) c).setText(null);
             }
@@ -166,7 +167,7 @@ public class Promotion extends PageView {
     }
 
     private void createTable() {
-        final String[] columnNames = {"code", "discount", "from", "to"};
+        final String[] columnNames = {"Code", "Discount", "From", "To"};
         final DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
 
         try {

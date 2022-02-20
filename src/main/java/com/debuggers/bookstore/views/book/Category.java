@@ -27,6 +27,7 @@ public class Category extends PageView {
     private JButton btnDelete;
     private JButton btnEdit;
     private JList subCatList;
+    private JPanel formPanel;
     private JTable table;
 
     private DataRepository dataRepository;
@@ -191,7 +192,7 @@ public class Category extends PageView {
     }
 
     private void clearFields() {
-        Arrays.stream(mainPanel.getComponents()).forEach((c) -> {
+        Arrays.stream(formPanel.getComponents()).forEach((c) -> {
             if (c instanceof JTextField) {
                 ((JTextField) c).setText(null);
             }
