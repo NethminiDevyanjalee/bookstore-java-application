@@ -77,7 +77,7 @@ public class BookModel implements SqlDataModel {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -131,6 +131,8 @@ public class BookModel implements SqlDataModel {
             this.id = resultSet.getInt("id");
             this.name = resultSet.getString("name");
             this.author = resultSet.getString("author");
+            this.authorId = resultSet.getInt("author_id");
+            this.publisherId = resultSet.getInt("publisher_id");
             this.categoryId = resultSet.getInt("category_id");
             this.subCategoryId = resultSet.getInt("sub_category_id");
             this.languageId = resultSet.getInt("language_id");
@@ -138,6 +140,7 @@ public class BookModel implements SqlDataModel {
             this.price = resultSet.getDouble("price");
             this.isbn = resultSet.getString("isbn");
             this.publisher = resultSet.getString("publisher");
+            this.description = resultSet.getString("description");
             this.isDelete = 0;
         } catch (SQLException e) {
             throw new DataRepositoryException(e, e.getMessage());
@@ -149,10 +152,13 @@ public class BookModel implements SqlDataModel {
         columnValueMap.set("name", this.name);
         columnValueMap.set("description", this.description);
         columnValueMap.set("author_id", this.authorId);
+        columnValueMap.set("publisher_id", this.publisherId);
+        columnValueMap.set("language_id", this.languageId);
         columnValueMap.set("category_id", this.categoryId);
         columnValueMap.set("sub_category_id", this.subCategoryId);
         columnValueMap.set("isbn", this.isbn);
         columnValueMap.set("slug", this.isbn);
+        columnValueMap.set("price", this.price);
         columnValueMap.set("is_delete", this.isDelete);
         return columnValueMap;
     }

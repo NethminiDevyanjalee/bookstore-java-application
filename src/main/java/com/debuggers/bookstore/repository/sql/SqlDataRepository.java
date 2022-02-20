@@ -214,7 +214,7 @@ public class SqlDataRepository implements DataRepository {
             ResultSet rs = preparedStatement.getGeneratedKeys();
 
             if (rs.next()) {
-                insert = rs.getObject(0);
+               // insert = rs.getObject(0);
             }
 
 

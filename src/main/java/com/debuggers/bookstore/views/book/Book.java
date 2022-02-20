@@ -12,6 +12,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -54,7 +56,7 @@ public class Book extends PageView {
             """;
     private String bookFetchQuery = """
             SELECT
-            book.id,book.name AS NAME,price,isbn,category_id,sub_category_id,language_id,
+            book.id,book.name AS NAME,price,isbn,category_id,sub_category_id,language_id,author_id,publisher_id,description,
             CONCAT(book_author.fname,' ',book_author.lname) AS author,
             book_publisher.name AS publisher,
             book_language.language
@@ -64,6 +66,7 @@ public class Book extends PageView {
             INNER JOIN book_language ON book_language.id = book.language_id
             WHERE book.is_delete = '0'
             """;
+    private String findISBNExist = "SELECT id FROM book WHERE isbn = %s";
 
     public Book(DataRepository dataRepository) {
         super();
@@ -217,27 +220,91 @@ public class Book extends PageView {
         if (bookModel == null)
             bookModel = new BookModel();
 
+        bookModel.setName(txtName.getText());
+        bookModel.setDescription(textareaDescription.getText());
+        bookModel.setPrice(Double.parseDouble(txtPrice.getText()));
+        bookModel.setIsbn(txtISBN.getText());
 
-        BookAuthorModel selectedAuthor = (BookAuthorModel) authorList.get(comboAuthor.getSelectedIndex());
-
-        BookPublisherModel selectedPublisher = (BookPublisherModel) publisherList.get(comboPublisher.getSelectedIndex());
-
-        BookLanguageModel selectedLanguage = (BookLanguageModel) languageList.get(comboLanguage.getSelectedIndex());
-
+        if (bookModel.getName().isEmpty()) {
+            Alert.showError("Validation Error:", "Name is required!");
+            return;
+        }
+        if (bookModel.getIsbn().isEmpty()) {
+            Alert.showError("Validation Error:", "ISBN is required!");
+            return;
+        }
+        if (bookModel.getPrice() == 0) {
+            Alert.showError("Validation Error:", "Price is required!");
+            return;
+        }
+        if (bookModel.getDescription().isEmpty()) {
+            Alert.showError("Validation Error:", "Description is required!");
+            return;
+        }
         if (comboAuthor.getSelectedIndex() == 0) {
             Alert.showError("Validation Error:", "Select the Author!");
             return;
         }
-
         if (comboPublisher.getSelectedIndex() == 0) {
             Alert.showError("Validation Error:", "Select the Publisher!");
             return;
         }
-
         if (comboLanguage.getSelectedIndex() == 0) {
             Alert.showError("Validation Error:", "Select the Language!");
             return;
         }
+        if (comboCategory.getSelectedIndex() == 0) {
+            Alert.showError("Validation Error:", "Select the Category!");
+            return;
+        }
+        if (comboSubCategory.getModel().getSize() > 0 && comboSubCategory.getSelectedIndex() == 0) {
+            Alert.showError("Validation Error:", "Select the Sub Category!");
+            return;
+        }
+
+        BookAuthorModel selectedAuthor = (BookAuthorModel) authorList.get(comboAuthor.getSelectedIndex() - 1);
+        BookPublisherModel selectedPublisher = (BookPublisherModel) publisherList.get(comboPublisher.getSelectedIndex() - 1);
+        BookLanguageModel selectedLanguage = (BookLanguageModel) languageList.get(comboLanguage.getSelectedIndex() - 1);
+        CategoryModel selectedCategory = (CategoryModel) categoryList.get(comboCategory.getSelectedIndex() - 1);
+        bookModel.setAuthorId(selectedAuthor.getId());
+        bookModel.setLanguageId(selectedLanguage.getId());
+        bookModel.setPublisherId(selectedPublisher.getId());
+        bookModel.setCategoryId(selectedCategory.getId());
+
+        if (!selectedCategory.getSubCategoriesIDSList().isEmpty()) {
+            int subCatId = selectedCategory.getSubCategoriesIDSList().get(comboSubCategory.getSelectedIndex() - 1);
+            bookModel.setSubCategoryId(subCatId);
+        }
+        dataRepository.createStatement("book");
+        dataRepository.where("isbn", bookModel.getIsbn());
+        try {
+
+
+            dataRepository.createStatement("book");
+            ResultSet resultSet = dataRepository.executeQuery(findISBNExist.formatted(bookModel.getIsbn()));
+            if (bookModel.getId() == 0) {
+                if (resultSet.next()) {
+                    Alert.showError("Validation Error:", "This ISBN is already exist!");
+                    return;
+                }
+                dataRepository.insert(bookModel);
+            } else {
+                if (resultSet.next() && resultSet.getInt("id") != bookModel.getId()) {
+                    Alert.showError("Validation Error:", "This ISBN is already exist!");
+                    return;
+                }
+                dataRepository.where("id", bookModel.getId());
+                dataRepository.update(bookModel);
+            }
+            Alert.showSuccess("Success", "This change has been saved!");
+            createTable();
+            clearFields();
+            bookModel = null;
+
+        } catch (DataRepositoryException | SQLException exception) {
+            Alert.showError("Database Error:", exception.getMessage());
+        }
+
     }
 
 
@@ -255,6 +322,23 @@ public class Book extends PageView {
         txtISBN.setText(bookModel.getIsbn());
         txtPrice.setText(String.valueOf(bookModel.getPrice()));
         textareaDescription.setText(bookModel.getDescription());
+        System.out.println(bookModel.getAuthorId());
+        BookAuthorModel authorModel = (BookAuthorModel) authorList.stream().filter((e) -> ((BookAuthorModel) e).getId() == bookModel.getAuthorId()).findFirst().get();
+        BookPublisherModel publisherModel = (BookPublisherModel) publisherList.stream().filter((e) -> ((BookPublisherModel) e).getId() == bookModel.getPublisherId()).findFirst().get();
+        BookLanguageModel languageModel = (BookLanguageModel) languageList.stream().filter((e) -> ((BookLanguageModel) e).getId() == bookModel.getLanguageId()).findFirst().get();
+        CategoryModel categoryModel = (CategoryModel) categoryList.stream().filter((e) -> ((CategoryModel) e).getId() == bookModel.getCategoryId()).findFirst().get();
+
+        comboAuthor.setSelectedIndex(authorList.indexOf(authorModel) + 1);
+        comboPublisher.setSelectedIndex(publisherList.indexOf(publisherModel) + 1);
+        comboLanguage.setSelectedIndex(languageList.indexOf(languageModel) + 1);
+        comboCategory.setSelectedIndex(categoryList.indexOf(categoryModel) + 1);
+
+        if (!categoryModel.getSubCategoriesIDSList().isEmpty()) {
+            int index = categoryModel.getSubCategoriesIDSList().indexOf(bookModel.getSubCategoryId());
+            comboSubCategory.setSelectedIndex(index + 1);
+        }
+
+
     }
 
     private void delete() {
@@ -293,6 +377,12 @@ public class Book extends PageView {
             if (c instanceof JTextField) {
                 ((JTextField) c).setText(null);
             }
+            if (c instanceof JTextArea) {
+                ((JTextArea) c).setText(null);
+            }
+            if (c instanceof JComboBox) {
+                ((JComboBox) c).setSelectedIndex(0);
+            }
         });
         bookModel = null;
     }
@@ -325,5 +415,6 @@ public class Book extends PageView {
         table.setFillsViewportHeight(true);
         jScrollPane.setViewportView(table);
     }
+
 }
 

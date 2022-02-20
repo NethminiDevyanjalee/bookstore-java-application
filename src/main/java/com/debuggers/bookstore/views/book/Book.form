@@ -215,9 +215,12 @@
             <constraints>
               <grid row="5" column="1" row-span="1" col-span="6" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="50"/>
+                <maximum-size width="720" height="100"/>
               </grid>
             </constraints>
-            <properties/>
+            <properties>
+              <columns value="5"/>
+            </properties>
           </component>
         </children>
       </grid>
