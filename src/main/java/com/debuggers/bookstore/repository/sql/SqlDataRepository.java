@@ -63,7 +63,6 @@ public class SqlDataRepository implements DataRepository {
     @Override
     public void execute(String query) throws DataRepositoryException {
 
-        System.out.println(query);
         try {
 
             statement = conn.createStatement();
