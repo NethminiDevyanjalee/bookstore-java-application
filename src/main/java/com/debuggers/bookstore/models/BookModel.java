@@ -14,6 +14,7 @@ public class BookModel implements SqlDataModel {
     private String author;
     private String language;
     private String publisher;
+    private String imageURL;
     private int authorId;
     private int categoryId;
     private int subCategoryId;
@@ -125,6 +126,14 @@ public class BookModel implements SqlDataModel {
         return publisher;
     }
 
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
+
     @Override
     public void readSQL(ResultSet resultSet) throws DataRepositoryException {
         try {
@@ -141,6 +150,7 @@ public class BookModel implements SqlDataModel {
             this.isbn = resultSet.getString("isbn");
             this.publisher = resultSet.getString("publisher");
             this.description = resultSet.getString("description");
+            this.imageURL = resultSet.getString("img_url");
             this.isDelete = 0;
         } catch (SQLException e) {
             throw new DataRepositoryException(e, e.getMessage());
@@ -160,6 +170,7 @@ public class BookModel implements SqlDataModel {
         columnValueMap.set("slug", this.isbn);
         columnValueMap.set("price", this.price);
         columnValueMap.set("is_delete", this.isDelete);
+        if (this.imageURL != null) columnValueMap.set("img_url", this.imageURL);
         return columnValueMap;
     }
 }
