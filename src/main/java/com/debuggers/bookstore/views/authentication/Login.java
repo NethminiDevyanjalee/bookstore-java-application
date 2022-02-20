@@ -9,6 +9,7 @@ import com.debuggers.bookstore.views.Dashboard;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -34,15 +35,21 @@ public class Login extends JFrame {
 
     private void initComponents() {
         setContentPane(mainPanel);
-        setLocation(0, 0);
         setSize(720, 540);
-        setTitle("Login | BOOKBERRIES");
+        Dimension windowSize = getSize();
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        Point centerPoint = ge.getCenterPoint();
+        int dx = centerPoint.x - windowSize.width / 2;
+        int dy = centerPoint.y - windowSize.height / 2;
+        setLocation(dx, dy);
+        setTitle("BOOKBERRIES");
         setVisible(true);
 
         try {
             imageLabel.setIcon(
                     new ImageIcon(ImageIO.read(new File("src/main/resources/images/user.png")))
             );
+            setIconImage(ImageIO.read(new File("src/main/resources/images/favicon.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }

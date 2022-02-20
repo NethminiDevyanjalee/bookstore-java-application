@@ -15,14 +15,15 @@ public class Dashboard extends View{
     private JPanel navPanel;
     private JButton homeButton;
     private JButton bookAuthorsButton;
-    private JPanel pageViewPanel;
+    private JPanel pagePanel;
     private JButton bookPublisherButton;
     private JButton bookCategoryButton;
     private JButton bookButton;
     private JButton stockButton;
-    private JButton promationButton;
+    private JButton promotionButton;
     private JButton usersButton;
     private JLabel lblUserName;
+    private JScrollPane pageViewPanel;
     private JButton btnUser;
     private JPanel cards;
 
@@ -79,7 +80,7 @@ public class Dashboard extends View{
                 navigateTo("stock");
             }
         });
-        promationButton.addMouseListener(new MouseAdapter() {
+        promotionButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
@@ -108,8 +109,7 @@ public class Dashboard extends View{
         cards.add(new Promotion(dataRepository),"promotion");
         cards.add(new User(dataRepository),"user");
 
-        pageViewPanel.setLayout(new BoxLayout(pageViewPanel, BoxLayout.PAGE_AXIS));
-        pageViewPanel.add(cards);
+        pageViewPanel.setViewportView(cards);
 
         lblUserName.setText(user.getFirstName());
         setContentPane(mainPanel);
