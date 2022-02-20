@@ -8,15 +8,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class PromotionModel implements SqlDataModel{
-    private int ID;
+    private int id;
     private String CouponCode;
-    private float Discount;
+    private float discount;
     private Date From;
-    private Date To;
+    private Date to;
     private int isDelete;
 
     public int getId() {
-        return ID;
+        return id;
     }
 
     public String getCouponCode(){
@@ -24,7 +24,7 @@ public class PromotionModel implements SqlDataModel{
     }
 
     public float getDiscount() {
-        return Discount;
+        return discount;
     }
 
     public Date getFrom() {
@@ -32,11 +32,11 @@ public class PromotionModel implements SqlDataModel{
     }
 
     public Date getTo() {
-        return To;
+        return to;
     }
 
     public void setId(int id) {
-        this.ID = id;
+        this.id = id;
     }
 
     public void setCouponCode(String couponCode) {
@@ -44,7 +44,7 @@ public class PromotionModel implements SqlDataModel{
     }
 
     public void setDiscount(float discount) {
-        this.Discount = discount;
+        this.discount = discount;
     }
 
     public void setFrom(Date from) {
@@ -52,7 +52,7 @@ public class PromotionModel implements SqlDataModel{
     }
 
     public void setTo(Date to) {
-        this.To = to;
+        this.to = to;
     }
 
     public int getIsDelete(){
@@ -66,11 +66,11 @@ public class PromotionModel implements SqlDataModel{
     @Override
     public void readSQL(ResultSet resultSet) throws DataRepositoryException {
         try {
-            this.ID = resultSet.getInt("id");
+            this.id = resultSet.getInt("id");
             this.CouponCode = resultSet.getString("code");
-            this.Discount = resultSet.getFloat("discount");
+            this.discount = resultSet.getFloat("discount");
             this.From = Date.valueOf(resultSet.getString("from"));
-            this.To = Date.valueOf(resultSet.getString("to"));
+            this.to = Date.valueOf(resultSet.getString("to"));
             this.isDelete = resultSet.getInt("is_delete");
         } catch (SQLException e) {
             throw new DataRepositoryException(e, e.getMessage());
@@ -79,11 +79,11 @@ public class PromotionModel implements SqlDataModel{
 
     @Override
     public ColumnValueMap writeSQL(ColumnValueMap columnValueMap) throws DataRepositoryException {
-        columnValueMap.set("id", this.ID);
-        columnValueMap.set("code", this.CouponCode);
-        columnValueMap.set("discount", this.Discount);
-        columnValueMap.set("from", this.From);
-        columnValueMap.set("to", this.To);
+        columnValueMap.set("id", this.id);
+        columnValueMap.set("`code`", this.CouponCode);
+        columnValueMap.set("discount", this.discount);
+        columnValueMap.set("`from`", this.From);
+        columnValueMap.set("`to`", this.to);
         columnValueMap.set("is_delete", this.isDelete);
         return columnValueMap;
     }

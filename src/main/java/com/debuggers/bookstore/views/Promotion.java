@@ -33,8 +33,6 @@ public class Promotion extends PageView {
     public Promotion(DataRepository dataRepository) {
         super();
         this.dataRepository = dataRepository;
-        dataRepository.createStatement("coupon_code");
-
         initComponents();
     }
 
@@ -100,8 +98,7 @@ public class Promotion extends PageView {
         }
 
         try {
-            dataRepository.createStatement();
-            System.out.println(promotionModel.getId());
+            dataRepository.createStatement("coupon_code");
             if (promotionModel.getId() == 0){
                 dataRepository.insert(promotionModel);
             }else {
@@ -173,7 +170,7 @@ public class Promotion extends PageView {
         final DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
 
         try {
-            dataRepository.createStatement();
+            dataRepository.createStatement("coupon_code");
             dataRepository.where("is_delete", 0);
             dataList = dataRepository.get(PromotionModel.class);
 
