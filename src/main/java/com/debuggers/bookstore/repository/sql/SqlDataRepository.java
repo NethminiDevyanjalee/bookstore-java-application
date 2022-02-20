@@ -60,6 +60,43 @@ public class SqlDataRepository implements DataRepository {
 
     }
 
+    @Override
+    public void execute(String query) throws DataRepositoryException {
+
+        System.out.println(query);
+        try {
+
+            statement = conn.createStatement();
+            statement.execute(query);
+
+        } catch (SQLException e) {
+
+            throw new DataRepositoryException(e, e.getMessage());
+
+        }
+    }
+
+    @Override
+    public List<SqlDataModel> executeQuery(String query, Class dataClass) throws DataRepositoryException {
+        List<SqlDataModel> dataList = new ArrayList<>();
+        try {
+
+            statement = conn.createStatement();
+            resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                SqlDataModel dataModel = (SqlDataModel) dataClass.getDeclaredConstructor().newInstance();
+                dataModel.readSQL(resultSet);
+                dataList.add(dataModel);
+            }
+        } catch (SQLException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+
+            throw new DataRepositoryException(e, e.getMessage());
+
+        }
+
+        return dataList;
+    }
+
 
     @Override
     public void createStatement() {
@@ -153,7 +190,9 @@ public class SqlDataRepository implements DataRepository {
 
 
     @Override
-    public void insert(SqlDataModel sqlDataModel) throws DataRepositoryException {
+    public Object insert(SqlDataModel sqlDataModel) throws DataRepositoryException {
+
+        Object insert = 0;
 
         if (table == null) throw new DataRepositoryException("Table new can not be null");
 
@@ -163,7 +202,7 @@ public class SqlDataRepository implements DataRepository {
 
         try {
 
-            preparedStatement = conn.prepareStatement(sql);
+            preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             int i = 1;
             for (Object obj : columnValueMap.getValues()) {
@@ -172,12 +211,20 @@ public class SqlDataRepository implements DataRepository {
             }
 
             preparedStatement.execute();
+            ResultSet rs = preparedStatement.getGeneratedKeys();
+
+            if (rs.next()) {
+                insert = rs.getObject(0);
+            }
+
 
         } catch (SQLException e) {
 
             throw new DataRepositoryException(e, e.getMessage());
 
         }
+
+        return insert;
     }
 
     @Override

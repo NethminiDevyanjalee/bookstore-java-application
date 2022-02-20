@@ -105,8 +105,7 @@ public class Author extends PageView {
 
         try {
 
-            dataRepository.createStatement();
-            System.out.println(bookAuthorModel.getId());
+            dataRepository.createStatement("book_author");
             if (bookAuthorModel.getId() == 0) {
                 dataRepository.insert(bookAuthorModel);
             } else {

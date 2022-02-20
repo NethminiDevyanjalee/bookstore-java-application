@@ -9,7 +9,7 @@ import com.debuggers.bookstore.repository.DataRepository;
 import com.debuggers.bookstore.repository.DataRepositoryException;
 import com.debuggers.bookstore.repository.sql.SqlDataRepository;
 import com.debuggers.bookstore.views.Alert;
-import com.debuggers.bookstore.views.Dashboard;
+import com.debuggers.bookstore.views.authentication.Login;
 
 public class BookStoreApplication {
 
@@ -24,7 +24,7 @@ public class BookStoreApplication {
             DataRepository dataRepository = new SqlDataRepository((JsonFileInputData) inputData);
             dataRepository.connect();
 
-            new Dashboard(dataRepository);
+            new Login(dataRepository);
 
         } catch (DataRepositoryException | InputException e) {
 

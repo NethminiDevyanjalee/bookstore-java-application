@@ -1,8 +1,6 @@
 package com.debuggers.bookstore.views.book;
 
-import com.debuggers.bookstore.models.BookAuthorModel;
-import com.debuggers.bookstore.models.BookModel;
-import com.debuggers.bookstore.models.SqlDataModel;
+import com.debuggers.bookstore.models.*;
 import com.debuggers.bookstore.repository.DataRepository;
 import com.debuggers.bookstore.repository.DataRepositoryException;
 import com.debuggers.bookstore.views.Alert;
@@ -35,6 +33,9 @@ public class Book extends PageView {
     private JTextArea textareaDescription;
 
     private List<SqlDataModel> dataList;
+    private List<SqlDataModel> authorList;
+    private List<SqlDataModel> publisherList;
+    private List<SqlDataModel> languageList;
     private BookModel bookModel;
 
     public Book(DataRepository dataRepository) {
@@ -68,7 +69,7 @@ public class Book extends PageView {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                //insert();
+                insert();
             }
         });
 
@@ -77,6 +78,71 @@ public class Book extends PageView {
 
     private void initComponents() {
         add(mainPanel);
+        loadLanguage();
+        loadAuthor();
+        loadPublisher();
+    }
+
+    private void loadLanguage() {
+
+        dataRepository.createStatement("book_language");
+
+        try {
+
+            languageList = dataRepository.get(BookLanguageModel.class);
+            comboLanguage.addItem("Choose");
+            languageList.stream().forEach((e)->{
+                BookLanguageModel language = (BookLanguageModel) e;
+                comboLanguage.addItem(language.getLanguage());
+            });
+
+        } catch (DataRepositoryException e) {
+
+            Alert.showError("Database Error:",e.getMessage());
+
+        }
+    }
+
+    private void loadAuthor() {
+
+        dataRepository.createStatement("book_author");
+        dataRepository.where("is_delete",0);
+
+        try {
+
+            authorList = dataRepository.get(BookAuthorModel.class);
+            comboAuthor.addItem("Choose");
+            authorList.stream().forEach((e)->{
+                BookAuthorModel author = (BookAuthorModel) e;
+                comboAuthor.addItem(author.getFirstName()+" "+author.getLastName());
+            });
+
+        } catch (DataRepositoryException e) {
+
+            Alert.showError("Database Error:",e.getMessage());
+
+        }
+    }
+
+    private void loadPublisher() {
+
+        dataRepository.createStatement("book_publisher");
+        dataRepository.where("is_delete",0);
+
+        try {
+
+            publisherList = dataRepository.get(BookPublisherModel.class);
+            comboPublisher.addItem("Choose");
+            publisherList.stream().forEach((e)->{
+                BookPublisherModel publisher = (BookPublisherModel) e;
+                comboPublisher.addItem(publisher.getName());
+            });
+
+        } catch (DataRepositoryException e) {
+
+            Alert.showError("Database Error:",e.getMessage());
+
+        }
     }
 
     private void insert() {
@@ -84,16 +150,27 @@ public class Book extends PageView {
         if (bookModel == null)
             bookModel = new BookModel();
 
-        bookModel.setName(txtName.getText());
 
+        BookAuthorModel selectedAuthor = (BookAuthorModel) authorList.get(comboAuthor.getSelectedIndex());
 
-        if (bookModel.getName().isEmpty()) {
-            Alert.showError("Validation Error:", "Name is Empty!");
+        BookPublisherModel selectedPublisher = (BookPublisherModel) publisherList.get(comboPublisher.getSelectedIndex());
+
+        BookLanguageModel selectedLanguage = (BookLanguageModel) languageList.get(comboLanguage.getSelectedIndex());
+
+        if (comboAuthor.getSelectedIndex() == 0) {
+            Alert.showError("Validation Error:", "Select the Author!");
             return;
         }
 
+        if (comboPublisher.getSelectedIndex() == 0) {
+            Alert.showError("Validation Error:", "Select the Publisher!");
+            return;
+        }
 
-
+        if (comboLanguage.getSelectedIndex() == 0) {
+            Alert.showError("Validation Error:", "Select the Language!");
+            return;
+        }
     }
 
     private void createTable() {
