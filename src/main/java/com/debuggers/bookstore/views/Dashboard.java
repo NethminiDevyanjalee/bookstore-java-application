@@ -4,10 +4,13 @@ import com.debuggers.bookstore.models.UserModel;
 import com.debuggers.bookstore.repository.DataRepository;
 import com.debuggers.bookstore.views.book.*;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
 
 public class Dashboard extends View{
 
@@ -24,6 +27,7 @@ public class Dashboard extends View{
     private JButton usersButton;
     private JLabel lblUserName;
     private JScrollPane pageViewPanel;
+    private JLabel imageLabel;
     private JButton btnUser;
     private JPanel cards;
 
@@ -115,6 +119,14 @@ public class Dashboard extends View{
         setContentPane(mainPanel);
 
         setVisible(true);
+
+        try {
+            imageLabel.setIcon(
+                    new ImageIcon(ImageIO.read(new File("src/main/resources/images/admin.png")))
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void navigateTo(String page) {
