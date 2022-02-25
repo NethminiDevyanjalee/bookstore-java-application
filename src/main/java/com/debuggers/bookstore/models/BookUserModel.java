@@ -13,6 +13,7 @@ public class BookUserModel implements SqlDataModel{
     private String lastName;
     private String email;
     private String password;
+    private String userRole;
     private int userRoleId;
 
     private int isDelete;
@@ -73,6 +74,10 @@ public class BookUserModel implements SqlDataModel{
         this.isDelete = isDelete;
     }
 
+    public String getUserRole() {
+        return userRole;
+    }
+
     @Override
     public void readSQL(ResultSet resultSet) throws DataRepositoryException {
         try {
@@ -80,11 +85,12 @@ public class BookUserModel implements SqlDataModel{
             this.firstName = resultSet.getString("fname");
             this.lastName = resultSet.getString("lname");
             this.email = resultSet.getString("email");
-            this.isDelete = resultSet.getInt("is_delete");
+            this.userRoleId = resultSet.getInt("role_id");
+            this.userRole = resultSet.getString("name");
+            this.isDelete = 0;
         } catch (SQLException e) {
             throw new DataRepositoryException(e, e.getMessage());
         }
-
     }
 
     @Override
@@ -93,6 +99,7 @@ public class BookUserModel implements SqlDataModel{
         columnValueMap.set("fname", this.firstName);
         columnValueMap.set("lname", this.lastName);
         columnValueMap.set("email", this.email);
+        columnValueMap.set("role_id", this.userRoleId);
         columnValueMap.set("is_delete", this.isDelete);
         return columnValueMap;
     }

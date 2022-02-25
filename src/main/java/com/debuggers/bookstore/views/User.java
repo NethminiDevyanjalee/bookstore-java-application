@@ -1,6 +1,8 @@
 package com.debuggers.bookstore.views;
 
-import com.debuggers.bookstore.models.*;
+import com.debuggers.bookstore.models.BookUserModel;
+import com.debuggers.bookstore.models.BookUserRoleModel;
+import com.debuggers.bookstore.models.SqlDataModel;
 import com.debuggers.bookstore.repository.DataRepository;
 import com.debuggers.bookstore.repository.DataRepositoryException;
 
@@ -27,13 +29,21 @@ public class User extends PageView{
     private JButton btnEdit;
     private JButton btnDelete;
     private JButton btnClear;
-    private JComboBox comboBox1;
+    private JComboBox comboUserRole;
     private JTextField txtPassword;
     private JTable table;
 
     private List<SqlDataModel> dataList;
     private List<SqlDataModel> userRoleList;
     private BookUserModel bookUserModel;
+
+    private final String userFetchQuery = """
+            SELECT
+            system_user.id,fname,lname,email,role_id,system_user_role.name 
+            FROM system_user 
+            INNER JOIN system_user_role ON system_user_role.id = system_user.role_id 
+            WHERE system_user.is_delete = '0'
+            """;
 
     public User(DataRepository dataRepository) {
         super();
@@ -84,10 +94,10 @@ public class User extends PageView{
         try {
 
             userRoleList = dataRepository.get(BookUserRoleModel.class);
-            comboBox1.addItem("Choose");
-            userRoleList.stream().forEach((e)->{
+            comboUserRole.addItem("Choose");
+            userRoleList.stream().forEach((e) -> {
                 BookUserRoleModel user = (BookUserRoleModel) e;
-                comboBox1.addItem(user.getUserRole());
+                comboUserRole.addItem(user.getUserRole());
             });
 
         } catch (DataRepositoryException e) {
@@ -107,6 +117,9 @@ public class User extends PageView{
         bookUserModel.setEmail(txtEmail.getText());
         bookUserModel.setPassword(getMD5(txtPassword.getText()));
 
+        BookUserRoleModel selectedUserRole = (BookUserRoleModel) userRoleList.get(comboUserRole.getSelectedIndex() - 1);
+        bookUserModel.setUserRoleId(selectedUserRole.getId());
+
         if (bookUserModel.getFirstName().isEmpty()) {
             Alert.showError("Validation Error:", "First Name is Empty!");
             return;
@@ -124,6 +137,10 @@ public class User extends PageView{
             return;
         }
 
+        if (comboUserRole.getSelectedIndex() == 0) {
+            Alert.showError("Validation Error:", "Select the UserRole!");
+            return;
+        }
 
         try {
 
@@ -162,6 +179,9 @@ public class User extends PageView{
         txtLastName.setText(bookUserModel.getLastName());
         txtEmail.setText(bookUserModel.getEmail());
 
+        BookUserRoleModel userRoleModel = (BookUserRoleModel) userRoleList.stream().filter((e) -> ((BookUserRoleModel) e).getId() == bookUserModel.getUserRoleId()).findFirst().get();
+        comboUserRole.setSelectedIndex(userRoleList.indexOf(userRoleModel) + 1);
+
     }
 
     private void delete() {
@@ -180,7 +200,7 @@ public class User extends PageView{
 
             try {
 
-                dataRepository.createStatement();
+                dataRepository.createStatement("system_user");
                 dataRepository.where("id", bookUserModel.getId());
                 dataRepository.update(bookUserModel);
                 bookUserModel = null;
@@ -201,23 +221,28 @@ public class User extends PageView{
             if (c instanceof JTextField) {
                 ((JTextField) c).setText(null);
             }
+            if (c instanceof JComboBox) {
+                ((JComboBox) c).setSelectedIndex(0);
+            }
         });
         bookUserModel = null;
     }
 
     private void createTable() {
-        final String[] columnNames = {"First Name", "Last Name", "Email"};
+        final String[] columnNames = {"First Name", "Last Name", "Email", "Role"};
         final DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
 
         try {
 
-            dataRepository.createStatement("system_user");
-            dataRepository.where("is_delete", 0);
-            dataList = dataRepository.get(BookUserModel.class);
+            dataList = dataRepository.executeQuery(userFetchQuery, BookUserModel.class);
 
             for (var row : dataList) {
                 BookUserModel data = (BookUserModel) row;
-                tableModel.addRow(new String[]{data.getFirstName(), data.getLastName(), data.getEmail()});
+                tableModel.addRow(new String[]{
+                        data.getFirstName(),
+                        data.getLastName(),
+                        data.getEmail(),
+                        data.getUserRole()});
             }
 
         } catch (DataRepositoryException e) {
